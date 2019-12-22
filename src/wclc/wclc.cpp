@@ -1,8 +1,9 @@
 //
 //#include <iostream>
 //#include <list>
-//#include <string>
-//#include <map>
+#include <string>
+#include <map>
+#include <vector>
 //#include <functional>
 //#include <algorithm>
 //#include <fstream>
@@ -112,6 +113,7 @@
 //        return 1;
 //    }
 //}
+
 
 int main() {
     return 0;
