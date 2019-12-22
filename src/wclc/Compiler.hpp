@@ -10,14 +10,16 @@
 #include <memory>
 #include <string>
 #include <map>
-#include <boost/filesystem/path.hpp>
+// #include <boost/filesystem/path.hpp>
 
 namespace wclc {
     class Compiler {
     public:
         Compiler(Parser *parser, Generator *generator);
 
-        std::map<std::string, std::string> compile(const boost::filesystem::path &input_file, const boost::filesystem::path &output_path);
+        // std::map<std::string, std::string> compile(const boost::filesystem::path &input_file, const boost::filesystem::path &output_path);
+
+        std::map<std::string, std::string> compile(const std::string &input_file, const std::string &output_path);
 
     private:
         Parser *parser;

@@ -3,11 +3,12 @@
 #include "HeaderTemplate.hpp"
 #include "SourceTemplate.hpp"
 
-#include <boost/algorithm/string.hpp>
+// #include <boost/algorithm/string.hpp>
 
 namespace wclc {
 
     std::string GenerateFrameHeader(const Frame &frame) {
+        /*
         std::string header = wclc::header_template;
 
         boost::replace_all(header, "${namespace}", "wcl");
@@ -52,8 +53,11 @@ namespace wclc {
 
         boost::replace_all(header, "${member_childs}", member_childs);
         boost::replace_all(header, "${header_members}", header_members);
-
+        
         return header;
+        */
+
+        return "";
     }
 
     std::list<std::string> GenerateCommandEnumImpl(const Menu &menu) {
@@ -71,7 +75,7 @@ namespace wclc {
     }
 
     std::string GenerateCommandEnum(const Frame &frame) {
-
+        /*
         const std::string separator = ", \n";
 
         std::string command_enum;
@@ -87,6 +91,9 @@ namespace wclc {
         }
 
         return command_enum;
+        */
+
+        return "";
     }
 
     std::string GenerateMenuSeparator() {
@@ -137,6 +144,7 @@ namespace wclc {
     }
 
     std::string GenerateFrameSource(const Frame &frame) {
+        /*
         std::string source = wclc::source_template;
 
         boost::replace_all(source, "${namespace}", "wcl");
@@ -151,6 +159,9 @@ namespace wclc {
         boost::replace_all(source, "${construction_menu}", GenerateMenuBar(frame.menu));
 
         return source;
+        */
+
+        return "";
     }
     
     Generator::Generator() {}

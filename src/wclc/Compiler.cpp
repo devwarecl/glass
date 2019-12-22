@@ -3,15 +3,15 @@
 #include <wcl/xml/Document.hpp>
 
 namespace wclc {
-
-    namespace bfs = boost::filesystem;
+    // namespace bfs = boost::filesystem;
 
     Compiler::Compiler(Parser *parser, Generator *generator) {
         this->parser = parser;
         this->generator = generator;
     }
 
-    std::map<std::string, std::string> Compiler::compile(const boost::filesystem::path &input_file, const boost::filesystem::path &output_path) {
+    std::map<std::string, std::string> Compiler::compile(const std::string &input_file, const std::string &output_path) {
+        /*
         Frame frame = this->parser->parse();
 
         bfs::path output_file = output_path / input_file.filename();
@@ -27,5 +27,8 @@ namespace wclc {
         };
 
         return outputFiles;
+        */
+
+        return {};
     }
 }
