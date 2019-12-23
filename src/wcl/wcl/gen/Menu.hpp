@@ -6,11 +6,11 @@
 
 #include <memory>
 #include <algorithm>
+#include <vector>
 #include <wcl/Menu.hpp>
 #include <wcl/AcceleratorTable.hpp>
 
 namespace wcl { namespace gen {
-    
     struct Menu {
         int id = 0;
         std::wstring text;
@@ -69,7 +69,6 @@ namespace wcl { namespace gen {
                     DWORD dwFlags = MF_ENABLED | MF_STRING;
                     menu->Append(dwFlags, entry.id, menuText);    
                 }
-                
             } else {
                 // menu with other menues
                 DWORD dwFlags = MF_ENABLED | MF_STRING | MF_POPUP;

@@ -7,6 +7,7 @@
 
 #include "wcl/Rect.hpp"
 
+
 namespace wcl {
     namespace def {
         enum class ControlType {
@@ -31,40 +32,40 @@ namespace wcl {
         }
 
 
-        struct Control {
+        struct ControlDef {
             ControlType type;
             Rect rect;
             std::string text;
         };
 
 
-        struct Form {
+        struct FormDef {
             std::string name;
-            std::vector<Control> children;
+            std::vector<ControlDef> children;
         };  
 
 
-        Form makeTestForm() {
-            return {
+        FormDef makeTestForm() {
+            return FormDef {
                 "Form1",
                 {
-                    { ControlType::label, Rect{0, 0, 150, 50}, "Hello, World" }, 
-                    { ControlType::button, Rect{0, 75, 125, 125}, "Push Me!" }, 
+                    { ControlType::label, Rect{0, 0, 150, 25}, "Hello, World" }, 
+                    { ControlType::button, Rect{0, 75, 125, 100}, "Push Me 1" }
                 }
             };
         }
         
 
-        HWND CreateWindowFromControl(HWND hHwndParent, const Control &control) {
+        HWND CreateWindowFromControl(HWND hHwndParent, const ControlDef &control) {
             const DWORD style = WS_CHILD | WS_VISIBLE;
             const int width = control.rect.right - control.rect.left;
             const int height = control.rect.bottom - control.rect.top;
 
-            char* className = nullptr;
+            const char* className = nullptr;
 
             switch (control.type) {
                 case ControlType::label: className = "Static"; break;
-                case ControlType::button: className = "button"; break;
+                case ControlType::button: className = "Button"; break;
             }
 
             if (className == nullptr) {
@@ -78,20 +79,26 @@ namespace wcl {
                 NULL
             );
 
+            // setup a nicer font
+            NONCLIENTMETRICS ncm;
+            ncm.cbSize = sizeof(NONCLIENTMETRICS);
+            ::SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(NONCLIENTMETRICS), &ncm, 0);
+            HFONT hFont = ::CreateFontIndirect(&ncm.lfMessageFont);
+            ::SendMessage(hwnd, WM_SETFONT, (WPARAM)hFont, MAKELPARAM(TRUE, 0));
+
             return hwnd;
         }
 
 
-        HWND CreateWindowFromForm(const Form &form, const char *className) {
+        HWND CreateWindowFromForm(const FormDef &form, const char *className) {
             HWND hwnd  = ::CreateWindow(className, form.name.c_str(), WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, 1000, 600, NULL, NULL, ::GetModuleHandle(NULL), NULL);
 
-            for (const Control &control : form.children) {
+            for (const ControlDef &control : form.children) {
                 CreateWindowFromControl(hwnd, control);
             }
 
             return hwnd;
         }
-
     }
 }
 
@@ -107,6 +114,10 @@ LRESULT CALLBACK WndProc(_In_ HWND   hWnd, _In_ UINT   message, _In_ WPARAM wPar
 }
 
 
+#pragma comment(linker,"\"/manifestdependency:type='win32' \
+name='Microsoft.Windows.Common-Controls' version='6.0.0.0' \
+processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
+
 int main() {
     WNDCLASSEX wcex;
 
@@ -118,7 +129,7 @@ int main() {
     wcex.hInstance      = ::GetModuleHandle(NULL);
     wcex.hIcon          = LoadIcon(::GetModuleHandle(NULL), IDI_APPLICATION);
     wcex.hCursor        = LoadCursor(NULL, IDC_ARROW);
-    wcex.hbrBackground  = (HBRUSH)(COLOR_WINDOW+1);
+    wcex.hbrBackground  = (HBRUSH)(COLOR_WINDOW);
     wcex.lpszMenuName   = NULL;
     wcex.lpszClassName  = "Form1";
     wcex.hIconSm        = LoadIcon(wcex.hInstance, IDI_APPLICATION);
@@ -128,7 +139,7 @@ int main() {
        return 1;
     }
 
-    const wcl::def::Form form1 = wcl::def::makeTestForm();
+    const wcl::def::FormDef form1 = wcl::def::makeTestForm();
     HWND hwnd = wcl::def::CreateWindowFromForm(form1, "Form1");
 
     if (!hwnd) {
