@@ -56,17 +56,31 @@ namespace wcl {
         }
         
 
+        void SetupWindowMetricsFromTheme(HWND hwnd) {
+            // setup a nicer font
+            NONCLIENTMETRICS ncm;
+            ncm.cbSize = sizeof(NONCLIENTMETRICS);
+            ::SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(NONCLIENTMETRICS), &ncm, 0);
+            HFONT hFont = ::CreateFontIndirect(&ncm.lfMessageFont);
+            ::SendMessage(hwnd, WM_SETFONT, (WPARAM)hFont, MAKELPARAM(TRUE, 0));
+        }
+
+        
+        const char *MapClassName(const ControlType type) {
+            switch (type) {
+                case ControlType::label:  return "Static";
+                case ControlType::button:  return "Button";
+                default: return nullptr;
+            }
+        }
+
+
         HWND CreateWindowFromControl(HWND hHwndParent, const ControlDef &control) {
             const DWORD style = WS_CHILD | WS_VISIBLE;
             const int width = control.rect.right - control.rect.left;
             const int height = control.rect.bottom - control.rect.top;
 
-            const char* className = nullptr;
-
-            switch (control.type) {
-                case ControlType::label: className = "Static"; break;
-                case ControlType::button: className = "Button"; break;
-            }
+            const char* className = MapClassName(control.type);
 
             if (className == nullptr) {
                 return NULL;
@@ -79,12 +93,7 @@ namespace wcl {
                 NULL
             );
 
-            // setup a nicer font
-            NONCLIENTMETRICS ncm;
-            ncm.cbSize = sizeof(NONCLIENTMETRICS);
-            ::SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(NONCLIENTMETRICS), &ncm, 0);
-            HFONT hFont = ::CreateFontIndirect(&ncm.lfMessageFont);
-            ::SendMessage(hwnd, WM_SETFONT, (WPARAM)hFont, MAKELPARAM(TRUE, 0));
+            SetupWindowMetricsFromTheme(hwnd);
 
             return hwnd;
         }
@@ -105,9 +114,16 @@ namespace wcl {
 
 LRESULT CALLBACK WndProc(_In_ HWND   hWnd, _In_ UINT   message, _In_ WPARAM wParam, _In_ LPARAM lParam) {
     switch (message) {
-    case WM_CLOSE:
-        PostMessage(hWnd, WM_QUIT, 0, 0);
-        return 0;
+        case WM_COMMAND: {
+            int controlId = HIWORD(wParam);
+            ::MessageBox(hWnd, "Hola", "Chao", MB_OK);
+            return 0;
+        }
+    
+        case WM_CLOSE: {
+            PostMessage(hWnd, WM_QUIT, 0, 0);
+            return 0;
+        }
     }
 
     return DefWindowProc(hWnd, message, wParam, lParam);
@@ -117,6 +133,7 @@ LRESULT CALLBACK WndProc(_In_ HWND   hWnd, _In_ UINT   message, _In_ WPARAM wPar
 #pragma comment(linker,"\"/manifestdependency:type='win32' \
 name='Microsoft.Windows.Common-Controls' version='6.0.0.0' \
 processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
+
 
 int main() {
     WNDCLASSEX wcex;
