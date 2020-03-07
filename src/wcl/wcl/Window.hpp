@@ -188,7 +188,7 @@ namespace wcl {
         }
 
         childs.push_back(std::move(child));
-    }-
+    }
 
     inline wcl::WindowPtr Window::RemoveChild(const int index) {
         auto childIterator = childs.begin();

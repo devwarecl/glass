@@ -7,7 +7,6 @@
 
 #include "wcl/Rect.hpp"
 
-
 namespace wcl {
     namespace def {
         enum class ControlType {
@@ -133,6 +132,44 @@ LRESULT CALLBACK WndProc(_In_ HWND   hWnd, _In_ UINT   message, _In_ WPARAM wPar
 #pragma comment(linker,"\"/manifestdependency:type='win32' \
 name='Microsoft.Windows.Common-Controls' version='6.0.0.0' \
 processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
+
+
+/**
+ * Factory for user-supplied Window implementations (that requires a new WindowClass)
+ */
+template<typename WindowImpl>
+class WindowFactory : protected WNDCLASSEXA {
+public:
+    WindowFactory() {
+        cbSize         = sizeof(WNDCLASSEXA);
+        style          = CS_HREDRAW | CS_VREDRAW;
+        lpfnWndProc    = &WindowImpl::WndProc;
+        cbClsExtra     = 0;
+        cbWndExtra     = 0;
+        hInstance      = ::GetModuleHandle(NULL);
+        hIcon          = LoadIcon(::GetModuleHandle(NULL), IDI_APPLICATION);
+        hCursor        = LoadCursor(NULL, IDC_ARROW);
+        hbrBackground  = (HBRUSH)(COLOR_WINDOW);
+        lpszMenuName   = NULL;
+        lpszClassName  = WindowImpl::Name;
+        hIconSm        = LoadIcon(wcex.hInstance, IDI_APPLICATION);
+
+        if (!RegisterClassExA(this)) {
+           MessageBox(NULL, "Error while registring a Window Class", "wcl-runner", NULL);
+           return 1;
+        }
+    }
+
+
+    ~WindowFactory() {
+        UnregisterClassA(lpszClassName);
+    }
+
+
+    WindowImpl Create() const {
+        return WindowImpl();
+    }
+};
 
 
 int main() {
