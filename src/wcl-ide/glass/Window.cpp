@@ -1,19 +1,5 @@
 
-#include "glass.hpp"
-
-#include <Windows.h>
-
-namespace glass {
-    inline bool to_bool(const BOOL value) {
-        return value == TRUE ? true : false;
-    }
-
-
-    inline BOOL to_BOOL(const bool value) {
-        return value == true ? TRUE : FALSE;
-    }
-}
-
+#include "Window.hpp"
 
 namespace glass {
     Window::Window(const std::string className, const DWORD dwStyle, const DWORD dwExStyle) 
@@ -126,60 +112,3 @@ namespace glass {
         return {0, 0, 0, 0};
     }
 }
-
-
-namespace glass {
-    Button::Button() : Window("BUTTON", WS_CHILD, NULL) {}
-}
-
-
-namespace glass {
-    Registry::~Registry() {
-        for (const std::string &className : classNames) {
-            ::UnregisterClassA(className.c_str(), ::GetModuleHandle(NULL));
-        }
-    }
-
-    void Registry::add(const char *className, WNDPROC wndProc) {
-        WNDCLASSEX wcex = {};
-
-        wcex.lpszClassName  = className;
-        wcex.hInstance      = ::GetModuleHandle(NULL);
-        wcex.cbSize         = sizeof(WNDCLASSEX);
-        wcex.lpfnWndProc    = wndProc;
-        wcex.style          = CS_HREDRAW | CS_VREDRAW;
-        wcex.cbClsExtra     = 0;
-        wcex.cbWndExtra     = 0;
-        wcex.hInstance      = ::GetModuleHandle(NULL);
-        wcex.hIcon          = LoadIcon(::GetModuleHandle(NULL), IDI_APPLICATION);
-        wcex.hCursor        = LoadCursor(NULL, IDC_ARROW);
-        wcex.hbrBackground  = (HBRUSH)(COLOR_WINDOW);
-        wcex.lpszMenuName   = NULL;
-        wcex.hIconSm        = LoadIcon(wcex.hInstance, IDI_APPLICATION);
-
-        ::RegisterClassEx(&wcex);
-        classNames.insert(wcex.lpszClassName);
-    }
-}
-
-
-namespace glass {
-    int MessageLoop::run() {
-        MSG msg;
-        while (GetMessage(&msg, NULL, 0, 0)) {
-            if (msg.message == WM_QUIT) {
-                return 0;
-            } else {
-                TranslateMessage(&msg);
-                DispatchMessage(&msg);
-            }
-        }
-
-        return (int) msg.wParam;
-    }
-}
-
-
-#pragma comment(linker,"\"/manifestdependency:type='win32' \
-name='Microsoft.Windows.Common-Controls' version='6.0.0.0' \
-processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
