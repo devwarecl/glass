@@ -1,10 +1,8 @@
 
 set (target "wcl-ide")
 set (sources 
-	"MainApplication.cpp" 
-	"MainApplication.hpp" 
-	"MainWindow.cpp" 
-	"MainWindow.hpp" 
+	"glass.cpp" 
+	"glass.hpp" 
 	"Main.cpp" 
 )
 
