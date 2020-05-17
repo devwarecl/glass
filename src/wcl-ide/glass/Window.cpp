@@ -23,6 +23,8 @@ namespace glass {
 
         assert(hWnd);
         assert(::IsWindow(hWnd));
+
+        this->sendMessage(WM_SETFONT, (WPARAM)GetStockObject(DEFAULT_GUI_FONT), TRUE);
     }
 
     void Window::setVisible(const bool value) {
@@ -102,12 +104,14 @@ namespace glass {
     void Window::setClientArea(const Rect &value) {
         assert(hWnd);
         assert(::IsWindow(hWnd));
+        assert(false);
     }
 
 
     Rect Window::getClientArea() const {
         assert(hWnd);
         assert(::IsWindow(hWnd));
+        assert(false);
 
         return {0, 0, 0, 0};
     }

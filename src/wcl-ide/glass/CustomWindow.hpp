@@ -41,33 +41,16 @@ namespace glass {
         virtual ~CustomWindow() {}
 
         static LRESULT WindowProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam) {
-            switch (Msg) {
-                case WM_CREATE: {
-                    auto cs = reinterpret_cast<CREATESTRUCT*>(lParam);
-                    auto customWindow = reinterpret_cast< CustomWindow<DerivedWindow>* >(cs->lpCreateParams);
+            if (Msg == WM_CREATE) {
+                auto cs = reinterpret_cast<CREATESTRUCT*>(lParam);
+                auto customWindow = reinterpret_cast< CustomWindow<DerivedWindow>* >(cs->lpCreateParams);
 
-                    assert(customWindow);
+                assert(customWindow);
 
-                    customWindow->hWnd = hWnd;
-                    hWndWindowMap.insert({hWnd, customWindow});
-
-                    break;
-                }
-                
-                case WM_DESTROY: {
-                    auto it = hWndWindowMap.find(hWnd); 
-                    assert(it != hWndWindowMap.end());
-
-                    auto customWindow = it->second;
-                    assert(customWindow);
-
-                    hWndWindowMap.erase(hWnd);
-                    customWindow->hWnd = NULL;
-
-                    break;
-                }
+                customWindow->hWnd = hWnd;
+                hWndWindowMap.insert({hWnd, customWindow});
             }
-
+            
             if (auto it = hWndWindowMap.find(hWnd); it != hWndWindowMap.end()) {
                 auto customWindow = it->second;
                 assert(customWindow);
@@ -75,6 +58,17 @@ namespace glass {
                 if (auto result = customWindow->procedure(Msg, wParam, lParam); result.has_value()) {
                     return result.value();
                 }
+            }
+            
+            if (Msg == WM_DESTROY) {
+                auto it = hWndWindowMap.find(hWnd); 
+                assert(it != hWndWindowMap.end());
+
+                auto customWindow = it->second;
+                assert(customWindow);
+
+                hWndWindowMap.erase(hWnd);
+                customWindow->hWnd = NULL;
             }
 
             return DefWindowProc(hWnd, Msg, wParam, lParam);
@@ -87,8 +81,17 @@ namespace glass {
         virtual std::optional<LRESULT> procedure(UINT Msg, WPARAM wParam, LPARAM lParam) {
             assert(hWnd);
 
+            switch (Msg) {
+            case WM_CREATE: this->onCreate(); break;
+            case WM_DESTROY: this->onDestroy(); break;
+            }
+
             return {};
         }
+
+        virtual void onCreate() {}
+
+        virtual void onDestroy() {}
     };
 
     template<class DerivedWindow>

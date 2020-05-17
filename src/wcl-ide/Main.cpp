@@ -22,28 +22,21 @@ public:
     }
 
 protected:
-    std::optional<LRESULT> procedure(UINT Msg, WPARAM wParam, LPARAM lParam) override {
-        switch (Msg) {
-        case WM_CREATE:
-            helloButton.create(this, "Hello", Rect{10, 60, 120, 40});
-            helloButton.setVisible(true);
+    void onCreate() override {
+        helloButton.create(this, "Hello", Rect{10, 60, 120, 40});
+        helloButton.setVisible(true);
 
-            helloLabel.create(this, "This is the push button", Rect{10, 10, 120, 40});
-            helloLabel.setVisible(true);
+        helloTextBox.create(this, "This is the push button", Rect{10, 10, 120, 40});
+        helloTextBox.setVisible(true);
+    }
 
-            break;
-
-        case WM_CLOSE:
-            this->postMessage(WM_QUIT, 0, 0);
-            break;
-        }
-
-        return Base::procedure(Msg, wParam, lParam);
+    void onDestroy() override {
+        this->postMessage(WM_QUIT, 0, 0);
     }
 
 private:
-    Button helloButton;
-    Label helloLabel;
+    CheckBox helloButton;
+    TextBox helloTextBox;
 };
 
 
