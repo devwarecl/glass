@@ -28,11 +28,10 @@
 #include <functional>
 #include <vector>
 
-#include "Rect.hpp"
-
 namespace wcl::core {
 
     struct Window;
+    struct Rect;
 
     class Frame;
     class Control {
