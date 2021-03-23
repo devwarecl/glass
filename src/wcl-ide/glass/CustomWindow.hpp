@@ -15,17 +15,6 @@ namespace glass {
     }
 
 
-    template<UINT Message>
-    class MessageHandler {};
-
-
-    template<>
-    class MessageHandler<WM_CREATE> {
-    public:
-
-    };
-
-
     template<typename DerivedWindow>
     class CustomWindow : public Window {
     public:

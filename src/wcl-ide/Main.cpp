@@ -1,33 +1,34 @@
 
+#define UNICODE
+
 #include <glass/core.hpp>
 
 using namespace glass;
 
 class Form1 : public glass::CustomWindow<Form1> {
 public:
-    explicit Form1() {
-        /*
-        this->connect<WM_CREATE>( [this](){
-            helloButton.create(this, "Hello", Rect{10, 60, 120, 40});
-            helloButton.setVisible(true);
-
-            helloLabel.create(this, "This is the push button", Rect{10, 10, 120, 40});
-            helloLabel.setVisible(true);
-        });
-
-        this->connect(WM_CLOSE)( [this]() {
-            this->postMessage(WM_QUIT, 0, 0);
-        });
-        */
-    }
+    explicit Form1() {}
 
 protected:
     void onCreate() override {
-        helloButton.create(this, "Hello", Rect{10, 60, 120, 40});
-        helloButton.setVisible(true);
+        findReplaceGroupBox.create(this, Rect{10, 10, 270, 80}, "Find/Replace parameters");
+        findWhatLabel.create(this, Rect{30, 30, 100, 20}, "Find what");
+        findWhatEdit.create(this, Rect{150, 30, 100, 20}, "");
+        replaceWithCheckBox.create(this, Rect{30, 55, 100, 20}, "Replace with");
+        replaceWithEdit.create(this, Rect{150, 55, 100, 20}, "");
 
-        helloTextBox.create(this, "This is the push button", Rect{10, 10, 120, 40});
-        helloTextBox.setVisible(true);
+        matchGroupBox.create(this, Rect{10, 100, 270, 80}, "Match options");
+        matchCaseCheckBox.create(this, Rect{30, 125, 125, 20}, "Match case");
+        matchWholeWordCheckBox.create(this, Rect{30, 145, 125, 20}, "Match whole word");
+
+        scopeGroupBox.create(this, Rect{10, 190, 270, 80}, "Scope");
+        scopeSelectionRadio.create(this, Rect{30, 210, 125, 20}, "Selection");
+        scopeCurrentDocumentRadio.create(this, Rect{30, 230, 125, 20}, "Current Document");
+
+        findNextButton.create(this, Rect{10, 280, 120, 30}, "Find Next");
+        closeButton.create(this, Rect{140, 280, 120, 30}, "Close");
+        replaceNextButton.create(this, Rect{10, 320, 120, 30}, "Replace Next");
+        replaceAllButton.create(this, Rect{140, 320, 120, 30}, "Replace Al");
     }
 
     void onDestroy() override {
@@ -35,12 +36,30 @@ protected:
     }
 
 private:
-    CheckBox helloButton;
-    TextBox helloTextBox;
+    GroupBox findReplaceGroupBox;
+    Label findWhatLabel;
+    TextBox findWhatEdit;
+    CheckBox replaceWithCheckBox;
+    TextBox replaceWithEdit;
+
+    GroupBox matchGroupBox;
+    CheckBox matchCaseCheckBox;
+    CheckBox matchWholeWordCheckBox;
+
+    GroupBox scopeGroupBox;
+    RadioButton scopeSelectionRadio;
+    RadioButton scopeCurrentDocumentRadio;
+
+    Button findNextButton;
+    Button closeButton;
+    Button replaceNextButton;
+    Button replaceAllButton;
 };
 
 
-int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR pCmdLine, int nCmdShow) {
+int main() {
+    ::SetProcessDPIAware();
+
     Registry registry;
     registry.add<Form1>();
 

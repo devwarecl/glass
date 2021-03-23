@@ -10,6 +10,10 @@ namespace glass {
     public:
         explicit Window(const std::string className, const DWORD dwStyle, const DWORD dwExStyle);
 
+        void create(Window *parent, const Rect &rect, const std::string &text) {
+            create(parent, text, rect);
+        }
+
         void create(Window *parent, const std::string &text, const Rect &rect);
 
         bool isCreated() const {
@@ -33,7 +37,6 @@ namespace glass {
         void setClientArea(const Rect &value) override;
 
         Rect getClientArea() const override;
-
 
     protected:
         LONG_PTR getLongPtr(int nIndex) const {
