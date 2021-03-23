@@ -60,7 +60,7 @@ namespace wcl::core {
 
         Control(const std::wstring &className, const std::wstring &text, const Rect &area);
 
-    protected:
+    private:
         struct Impl;
         std::unique_ptr<Impl> mImpl;
     };

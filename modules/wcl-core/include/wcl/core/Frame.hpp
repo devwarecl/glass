@@ -62,7 +62,7 @@ namespace wcl::core {
     protected:
         void addChildImpl(Control *control);
         
-    protected:
+    private:
         struct Impl;
         std::unique_ptr<Impl> mImpl;
     };
