@@ -28,14 +28,13 @@
 #include <functional>
 #include <vector>
 
+#include "Rect.hpp"
+
 namespace wcl::core {
-    struct Rect {
-        int left = 0, top = 0;
-        int width = 100, height = 50;
-    };
+
+    struct Window;
 
     class Frame;
-
     class Control {
         friend class Frame;
 
@@ -54,6 +53,8 @@ namespace wcl::core {
         std::vector<std::function<void ()>> clickEvent;
 
     protected:
+        Window* getWindow() const;
+
         Control(const std::wstring &className);
 
         Control(const std::wstring &className, const std::wstring &text);

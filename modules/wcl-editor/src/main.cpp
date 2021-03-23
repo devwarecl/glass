@@ -30,9 +30,11 @@ struct Margin {
  */
 class Sizer {
 public:
+    /*
     void addControl(Control *control, ) {
 
     }
+    */
 
 private:
     std::vector<Control*> mControls;

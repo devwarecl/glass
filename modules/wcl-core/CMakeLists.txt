@@ -6,16 +6,14 @@ set(sources
 	"include/wcl/core/Application.hpp"
 	"include/wcl/core/Frame.hpp"
 	"include/wcl/core/Control.hpp"
+	"include/wcl/core/Rect.hpp"
 
 	"src/Application.cpp"
-
 	"src/Frame.cpp"
-	"src/Frame.Impl.cpp"
-	"src/Frame.Impl.hpp"
-
 	"src/Control.cpp"
-	"src/Control.Impl.cpp"
-	"src/Control.Impl.hpp"
+
+	"src/Window.hpp"
+	"src/Window.cpp"
 )
 
 add_library(${target} ${sources})
