@@ -29,9 +29,13 @@
 #include <vector>
 
 namespace wcl::core {
-
     struct Window;
     struct Rect;
+
+    class Control;
+
+    typedef std::function< void(const std::string&, Control*) > EventCallback;
+    typedef int ConnectionId;
 
     class Frame;
     class Control {
@@ -48,11 +52,14 @@ namespace wcl::core {
 
         Rect getClientArea() const;
 
-    public:
-        std::vector<std::function<void ()>> clickEvent;
+        ConnectionId connect(const std::string &eventName, EventCallback callback);
+
+        void disconnect(const std::string &eventName, const ConnectionId id);
 
     protected:
         Window* getWindow() const;
+
+        void raise(const std::string &eventName);
 
         Control(const std::wstring &className);
 

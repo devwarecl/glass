@@ -134,11 +134,6 @@ namespace wcl::core {
         mImpl->mChildControls.emplace_back(control);
         mImpl->mControlsCreated ++;
     }
-
-
-    void Frame::connectClick(Control *control, std::function<void()> func) {
-        control->clickEvent.push_back(func);
-    }
 }
 
 
@@ -167,9 +162,7 @@ namespace wcl::core {
                 auto hWndButton = reinterpret_cast<HWND>(lParam);
                 auto button = frame->mImpl->mHandleControlMap[hWndButton];
 
-                for (auto &func : button->clickEvent) {
-                    func();
-                }
+                button->raise("click");
 
                 return 0;
             }

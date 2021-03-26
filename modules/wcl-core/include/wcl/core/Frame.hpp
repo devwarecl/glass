@@ -57,8 +57,6 @@ namespace wcl::core {
             return control;
         }
 
-        void connectClick(Control *control, std::function<void()> func);
-
     protected:
         void addChildImpl(Control *control);
         

@@ -11,36 +11,6 @@ using wcl::core::Edit;
 using wcl::core::Rect;
 using wcl::core::Control;
 
-enum class Orientation {
-    None = 0x00,
-    Horizontal = 0x01, 
-    Vertical = 0x02,
-    Both = Horizontal | Vertical
-};
-
-
-struct Margin {
-    int top, left;
-    int bottom, right;
-};
-
-
-/**
- * @brief Arrange controls in a stacked way, vertically or horizontally.
- */
-class Sizer {
-public:
-    /*
-    void addControl(Control *control, ) {
-
-    }
-    */
-
-private:
-    std::vector<Control*> mControls;
-};
-
-
 class EditorFrame : public Frame {
 public:
     EditorFrame() : Frame(L"wcl-editor") {
@@ -51,7 +21,9 @@ public:
 
         mSayHelloButton = createChild<Button>(L"Say Hello", Rect{5, 155, 400, 50});
 
-        connectClick(mSayHelloButton, [this](){this->sayHelloButtonClicked();});
+        mSayHelloButton->connect("click", [this](const std::string &, Control *) {
+            this->sayHelloButtonClicked();
+        });
     }
 
 
