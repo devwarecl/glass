@@ -5,6 +5,9 @@
 #include <memory>
 
 namespace wcl::core {
+    struct MenuHandle;
+
+    class Frame;
     class Menu;
     class MenuBar {
     public:
@@ -12,10 +15,14 @@ namespace wcl::core {
 
         ~MenuBar();
 
+        bool create();
+
         Menu* addMenu(const std::wstring &text);
+
+        MenuHandle* getHandle();
 
     private:
         struct Impl;
-        std::unique_ptr<Menu> mImpl;
+        std::unique_ptr<Impl> mImpl;
     };
 }

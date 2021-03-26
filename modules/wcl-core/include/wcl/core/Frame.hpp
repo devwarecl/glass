@@ -31,6 +31,7 @@
 #include <functional>
 
 namespace wcl::core {
+    class MenuBar;
     class Control;
     class Frame {
     public:
@@ -56,6 +57,8 @@ namespace wcl::core {
 
             return control;
         }
+
+        MenuBar* getMenuBar();
 
     protected:
         void addChildImpl(Control *control);

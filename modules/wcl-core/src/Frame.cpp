@@ -21,6 +21,7 @@
 
 #include <wcl/core/Frame.hpp>
 #include <wcl/core/Control.hpp>
+#include <wcl/core/MenuBar.hpp>
 
 #include <map>
 
@@ -29,6 +30,7 @@
 #include <Windows.h>
 
 #include "Window.hpp"
+#include "MenuHandle.hpp"
 
 //--------------------------------------
 // Frame::Impl interface declaration
@@ -44,6 +46,8 @@ namespace wcl::core {
         int mControlsCreated = 10000;
         std::map<HWND, Control*> mHandleControlMap;
         std::map<int, Control*> mIdControlMap;
+
+        MenuBar mMenuBar;
 
     public:
         static std::map<HWND, Frame*> sFrameMap;
@@ -66,13 +70,16 @@ namespace wcl::core {
 
 
     void Frame::create() {
+        // create the menuBar
+        mImpl->mMenuBar.create();
+
         mImpl->registerClass();
 
         mImpl->mHandle = ::CreateWindowExW(
             NULL, mImpl->mClassName,  mImpl->mCreationTitle.c_str(),  WS_OVERLAPPEDWINDOW, 
             CW_USEDEFAULT, CW_USEDEFAULT,
             CW_USEDEFAULT, CW_USEDEFAULT, 
-            NULL, NULL,
+            NULL, mImpl->mMenuBar.getHandle()->hMenu,
             ::GetModuleHandle(NULL),
             this
         );
@@ -133,6 +140,11 @@ namespace wcl::core {
     void Frame::addChildImpl(Control *control) {
         mImpl->mChildControls.emplace_back(control);
         mImpl->mControlsCreated ++;
+    }
+
+
+    MenuBar* Frame::getMenuBar() {
+        return &mImpl->mMenuBar;
     }
 }
 

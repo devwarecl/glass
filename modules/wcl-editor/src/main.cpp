@@ -24,6 +24,11 @@ public:
         mSayHelloButton->connect("click", [this](const std::string &, Control *) {
             this->sayHelloButtonClicked();
         });
+
+        getMenuBar()->addMenu(L"&File");
+        getMenuBar()->addMenu(L"&Edit");
+        getMenuBar()->addMenu(L"&Compile");
+        getMenuBar()->addMenu(L"&Help");
     }
 
 

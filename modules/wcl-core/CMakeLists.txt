@@ -22,6 +22,9 @@ set(sources
 
 	"src/Window.hpp"
 	"src/Window.cpp"
+
+	"src/MenuHandle.hpp"
+	"src/MenuHandle.cpp"
 )
 
 add_library(${target} ${sources})

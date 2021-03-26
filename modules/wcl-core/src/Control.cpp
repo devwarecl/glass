@@ -34,7 +34,6 @@
 
 
 namespace wcl::core {
-
     struct Connection {
         ConnectionId id;
         EventCallback callback;
