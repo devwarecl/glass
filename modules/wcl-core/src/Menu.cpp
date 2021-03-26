@@ -21,15 +21,30 @@ namespace wcl::core {
         std::unique_ptr<MenuItem> mItem;
 
         static MenuChild item(const std::wstring &text) {
-
+            return {
+                MenuChildType::Item,
+                text,
+                {}, 
+                {}
+            };
         }
 
         static MenuChild menu(const std::wstring &text) {
-
+            return {
+                MenuChildType::Menu,
+                text,
+                {}, 
+                {}
+            };
         }
 
         static MenuChild separator() {
-            
+            return {
+                MenuChildType::Separator,
+                L"",
+                {}, 
+                {}
+            };
         }
     };
 
@@ -37,11 +52,6 @@ namespace wcl::core {
     struct Menu::Impl {
         MenuHandle mHandle;
         std::vector<MenuChild> mChildren;
-
-        std::vector<std::wstring> mChildTexts;
-        std::vector<MenuChildType> mChildTypes;
-        std::vector<std::unique_ptr<Menu>> mChildMenues;
-        std::vector<std::unique_ptr<MenuItem>> mChildItems;
     };
 
 
@@ -54,32 +64,40 @@ namespace wcl::core {
     void Menu::create() {
         mImpl->mHandle.hMenu = ::CreateMenu();
 
-        for (const auto &menuText : mImpl->mChildTexts) {
-            if (menuText == L"-") {
+        for (const auto &child : mImpl->mChildren) {
+            switch (child.mType) {
+            case MenuChildType::Separator:
                 ::AppendMenuW(mImpl->mHandle.hMenu, MF_SEPARATOR, 0, nullptr);
-            } else {
-                ::AppendMenuW(mImpl->mHandle.hMenu, MF_STRING, 0, menuText.c_str());
+                break;
+
+            case MenuChildType::Item:
+                ::AppendMenuW(mImpl->mHandle.hMenu, MF_STRING, 0, child.mText.c_str());
+                break;
+
+            case MenuChildType::Menu:
+                // TODO
+                break;
             }
         }
     }
 
 
     MenuItem* Menu::addItem(const std::wstring &text) {
-        
-
-        mImpl->mChildTexts.push_back(text);
+        mImpl->mChildren.push_back(MenuChild::item(text));
 
         return nullptr;
     }
 
 
     Menu* Menu::addMenu(const std::wstring &text) {
+        mImpl->mChildren.push_back(MenuChild::menu(text));
+
         return nullptr;
     }
 
 
     void Menu::addSeparator() {
-        mImpl->mChildTexts.push_back(L"-");
+        mImpl->mChildren.push_back(MenuChild::separator());
     }
 
 
