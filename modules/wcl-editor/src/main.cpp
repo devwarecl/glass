@@ -1,6 +1,4 @@
 
-#include <initializer_list>
-
 #include <wcl/core.hpp>
 
 using wcl::core::Application;
@@ -10,6 +8,7 @@ using wcl::core::Button;
 using wcl::core::Edit;
 using wcl::core::Rect;
 using wcl::core::Control;
+using wcl::core::Menu;
 
 class EditorFrame : public Frame {
 public:
@@ -25,10 +24,38 @@ public:
             this->sayHelloButtonClicked();
         });
 
-        getMenuBar()->addMenu(L"&File");
-        getMenuBar()->addMenu(L"&Edit");
-        getMenuBar()->addMenu(L"&Compile");
-        getMenuBar()->addMenu(L"&Help");
+        Menu *menu = nullptr;
+
+        menu = getMenuBar()->addMenu(L"&File");
+        menu->addItem(L"&New");
+        menu->addSeparator();
+        menu->addItem(L"&Open ...");
+        menu->addSeparator();
+        menu->addItem(L"&Save");
+        menu->addItem(L"&Save As...");
+        menu->addSeparator();
+        menu->addItem(L"&Exit");
+
+        menu = getMenuBar()->addMenu(L"&Edit");
+        menu->addItem(L"&Undo");
+        menu->addItem(L"&Redo");
+        menu->addSeparator();
+        menu->addItem(L"&Cut");
+        menu->addItem(L"&Copy");
+        menu->addItem(L"&Paste");
+        menu->addSeparator();
+        menu->addItem(L"&Select All");
+        menu->addSeparator();
+        menu->addItem(L"&Find ...");
+        menu->addItem(L"&Replace ...");
+
+        menu = getMenuBar()->addMenu(L"&Build");
+        menu->addItem(L"&Clean");
+        menu->addItem(L"&Build");
+        menu->addItem(L"&Rebuild");
+
+        menu = getMenuBar()->addMenu(L"&Help");
+        menu->addItem(L"About ...");
     }
 
 

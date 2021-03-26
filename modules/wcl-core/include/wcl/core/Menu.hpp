@@ -5,6 +5,8 @@
 #include <memory>
 
 namespace wcl::core {
+    struct MenuHandle;
+
     class MenuItem;
     class Menu {
     public:
@@ -18,8 +20,12 @@ namespace wcl::core {
 
         void addSeparator();
 
+        void create();
+
+        MenuHandle* getHandle();
+
     private:
         struct Impl;
-        std::unique_ptr<Menu> mImpl;
+        std::unique_ptr<Impl> mImpl;
     };
 }
