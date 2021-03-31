@@ -22,7 +22,7 @@ namespace wcl::core {
 
         void create();
 
-        MenuHandle* getHandle();
+        const MenuHandle* getHandle() const;
 
     private:
         struct Impl;

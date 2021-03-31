@@ -11,6 +11,7 @@ using wcl::core::Control;
 using wcl::core::EventRaiser;
 using wcl::core::Menu;
 
+
 class EditorFrame : public Frame {
 public:
     EditorFrame() : Frame(L"wcl-editor") {
@@ -28,7 +29,10 @@ public:
         Menu *menu = nullptr;
 
         menu = getMenuBar()->addMenu(L"&File");
-        menu->addItem(L"&New");
+        menu->addItem(L"&New")->connect("click", [this](const std::string &, EventRaiser *) {
+            this->sayHelloButtonClicked();
+        });
+
         menu->addSeparator();
         menu->addItem(L"&Open ...");
         menu->addSeparator();

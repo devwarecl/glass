@@ -7,9 +7,10 @@
 #include "EventRaiser.hpp"
 
 namespace wcl::core {
+    class Menu;
     class MenuItem : public EventRaiser {
     public:
-        MenuItem();
+        explicit MenuItem(const Menu *parent, const int id);
 
         ~MenuItem();
 

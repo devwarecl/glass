@@ -101,7 +101,7 @@ namespace wcl::core {
     }
 
 
-    MenuHandle* Menu::getHandle() {
+    const MenuHandle* Menu::getHandle() const {
         return &mImpl->mHandle;
     }
 }
