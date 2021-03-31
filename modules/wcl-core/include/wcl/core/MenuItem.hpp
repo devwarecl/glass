@@ -4,8 +4,10 @@
 #include <string>
 #include <memory>
 
+#include "EventRaiser.hpp"
+
 namespace wcl::core {
-    class MenuItem {
+    class MenuItem : public EventRaiser {
     public:
         MenuItem();
 
@@ -45,6 +47,6 @@ namespace wcl::core {
 
     private:
         struct Impl;
-        std::unique_ptr<MenuItem> mImpl;
+        std::unique_ptr<Impl> mImpl;
     };
 }

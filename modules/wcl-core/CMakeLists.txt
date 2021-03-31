@@ -11,7 +11,8 @@ set(sources
 	"include/wcl/core/Menu.hpp"
 	"include/wcl/core/MenuItem.hpp"
 	"include/wcl/core/Action.hpp"
-
+	"include/wcl/core/EventRaiser.hpp"
+	
 	"src/Application.cpp"
 	"src/Frame.cpp"
 	"src/Control.cpp"
@@ -19,6 +20,7 @@ set(sources
 	"src/Menu.cpp"
 	"src/MenuItem.cpp"
 	"src/Action.cpp"
+	"src/EventRaiser.cpp"
 
 	"src/Window.hpp"
 	"src/Window.cpp"

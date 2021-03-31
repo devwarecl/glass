@@ -28,17 +28,14 @@
 #include <functional>
 #include <vector>
 
+#include "EventRaiser.hpp"
+
 namespace wcl::core {
     struct Window;
     struct Rect;
 
-    class Control;
-
-    typedef std::function< void(const std::string&, Control*) > EventCallback;
-    typedef int ConnectionId;
-
     class Frame;
-    class Control {
+    class Control : public EventRaiser {
         friend class Frame;
 
     public:
@@ -52,14 +49,8 @@ namespace wcl::core {
 
         Rect getClientArea() const;
 
-        ConnectionId connect(const std::string &eventName, EventCallback callback);
-
-        void disconnect(const std::string &eventName, const ConnectionId id);
-
     protected:
         Window* getWindow() const;
-
-        void raise(const std::string &eventName);
 
         Control(const std::wstring &className);
 

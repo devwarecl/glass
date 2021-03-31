@@ -8,6 +8,7 @@ using wcl::core::Button;
 using wcl::core::Edit;
 using wcl::core::Rect;
 using wcl::core::Control;
+using wcl::core::EventRaiser;
 using wcl::core::Menu;
 
 class EditorFrame : public Frame {
@@ -20,7 +21,7 @@ public:
 
         mSayHelloButton = createChild<Button>(L"Say Hello", Rect{5, 155, 400, 50});
 
-        mSayHelloButton->connect("click", [this](const std::string &, Control *) {
+        mSayHelloButton->connect("click", [this](const std::string &, EventRaiser *) {
             this->sayHelloButtonClicked();
         });
 

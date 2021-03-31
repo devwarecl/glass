@@ -34,23 +34,8 @@
 
 
 namespace wcl::core {
-    struct Connection {
-        ConnectionId id;
-        EventCallback callback;
-
-        bool operator< (const Connection &rhs) const {
-            return id < rhs.id;
-        }
-
-        bool operator== (const Connection &rhs) const {
-            return id == rhs.id;
-        }
-    };
-
     struct Control::Impl {
         Window mWindow;
-
-        std::map<std::string, std::set<Connection>> mConnectionsMap;
     };
 }
 
@@ -120,53 +105,5 @@ namespace wcl::core {
 
     Window* Control::getWindow() const {
         return &mImpl->mWindow;
-    }
-
-
-    void Control::raise(const std::string &eventName) {
-        auto it = mImpl->mConnectionsMap.find(eventName);
-        // assert(it != mImpl->mConnectionsMap.end());
-
-        if (it != mImpl->mConnectionsMap.end()) {
-            for (auto &connection : it->second) {
-                connection.callback(eventName, this);
-            }
-        }
-    }
-
-
-    ConnectionId Control::connect(const std::string &eventName, EventCallback callback) {
-        auto it = mImpl->mConnectionsMap.find(eventName);
-        // assert(it != mImpl->mConnectionsMap.end());
-
-        if (it != mImpl->mConnectionsMap.end()) {
-            const auto id = static_cast<ConnectionId>(it->second.size() + 1);
-
-            it->second.insert({id, callback});
-
-            return id;
-        } else {
-            mImpl->mConnectionsMap[eventName].insert({1, callback});
-
-            return 1;
-        }
-    }
-
-
-    void Control::disconnect(const std::string &eventName, const ConnectionId id) {
-        auto it = mImpl->mConnectionsMap.find(eventName);
-        // assert(it != mImpl->mConnectionsMap.end());
-
-        if (it != mImpl->mConnectionsMap.end()) {
-            auto &callbacks = it->second;
-
-            const auto pos = std::find_if(callbacks.begin(), callbacks.end(), [id](const auto &connection) {
-                return connection.id == id;
-            });
-
-            if (pos != callbacks.end()) {
-                callbacks.erase(pos);
-            }
-        }
     }
 }

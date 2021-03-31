@@ -13,4 +13,5 @@ add_subdirectory("src/wcl-runner")
 add_subdirectory("src/wcl-ide")
 
 add_subdirectory("modules/wcl-core")
+add_subdirectory("modules/wcl-scintilla")
 add_subdirectory("modules/wcl-editor")
