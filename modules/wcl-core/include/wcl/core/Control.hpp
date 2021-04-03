@@ -62,40 +62,4 @@ namespace wcl::core {
         struct Impl;
         std::unique_ptr<Impl> mImpl;
     };
-
-
-    class Button : public Control {
-        friend class Frame;
-
-    protected:
-        Button() : Control(L"BUTTON") {}
-
-        Button(const std::wstring &text) : Control(L"BUTTON", text) {}
-
-        Button(const std::wstring &text, const Rect &area) : Control(L"BUTTON", text, area) {}
-    };
-
-
-    class Edit : public Control  {
-        friend class Frame;
-
-    protected:
-        Edit() : Control(L"EDIT") {}
-
-        Edit(const std::wstring &text) : Control(L"EDIT", text) {}
-
-        Edit(const std::wstring &text, const Rect &area) : Control(L"EDIT", text, area) {}
-    };
-    
-
-    class Label : public Control {
-        friend class Frame;
-
-    protected:
-        Label() : Control(L"STATIC") {}
-
-        Label(const std::wstring &text) : Control(L"STATIC", text) {}
-
-        Label(const std::wstring &text, const Rect &area) : Control(L"STATIC", text, area) {}
-    };
 }

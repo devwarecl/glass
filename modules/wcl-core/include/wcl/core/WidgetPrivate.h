@@ -10,7 +10,7 @@ namespace wcl::core {
 
         ~WidgetPrivate();
 
-        bool create();
+        bool create(int x, int y, int w, int h, HWND hWndParent);
 
         HWND getHwnd() const {
             return mHwnd;
@@ -21,8 +21,5 @@ namespace wcl::core {
         const char *mClassName = nullptr;
         DWORD mStyle = 0L;
         DWORD mExStyle = 0L;
-        HWND mParentHandle = nullptr;
-        int mX = CW_USEDEFAULT, mY = CW_USEDEFAULT;
-        int mWidth = CW_USEDEFAULT, mHeight = CW_USEDEFAULT;
     };
 }

@@ -9,4 +9,9 @@
 #include "core/Menu.hpp"
 #include "core/MenuItem.hpp"
 #include "core/Action.hpp"
+
 #include "core/Widget.hpp"
+#include "core/Label.h"
+#include "core/Button.h"
+#include "core/ComboBox.hpp"
+#include "core/Edit.h"

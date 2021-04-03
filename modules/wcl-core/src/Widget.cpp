@@ -22,13 +22,9 @@
 
 #include <wcl/core/Widget.hpp>
 
-#include <wcl/core/WidgetPrivate.h>
-
-#include <Windows.h>
 #include <cassert>
-
+#include <wcl/core/WidgetPrivate.h>
 #include "WinUtil.hpp"
-
 
 namespace wcl::core {
     Widget::Widget() : mImpl(new WidgetPrivate()) {}
@@ -45,8 +41,21 @@ namespace wcl::core {
     bool Widget::create() {
         assert(mImpl);
 
-        if (mImpl->create()) {
+        if (mImpl->create(CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, nullptr)) {
+            this->onCreated();
+            return true;
+        }
 
+        return false;
+    }
+
+
+    bool Widget::create(const Rect &area, Widget *parent) {
+        assert(mImpl);
+
+        const HWND hWndParent = parent ? parent->getImpl()->getHwnd() : nullptr;
+
+        if (mImpl->create(area.left, area.top, area.width, area.height, hWndParent)) {
             this->onCreated();
             return true;
         }

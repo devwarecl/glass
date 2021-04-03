@@ -25,60 +25,42 @@
 
 #include <map>
 
-#define UNICODE
-#define WIN32_LEAN_AND_MEAN
-#include <Windows.h>
+#include <wcl/core/WidgetPrivate.h>
 
 #include "Window.hpp"
 #include "MenuHandle.hpp"
 
 
 namespace wcl::core {
-    struct Frame::Impl {
-    public:
-        std::wstring mCreationTitle;
-        const wchar_t *mClassName = L"Frame";
-        HWND mHandle = nullptr;
-        std::vector<std::unique_ptr<Control>> mChildControls;
 
-        int mControlsCreated = 10000;
-        std::map<HWND, Control*> mHandleControlMap;
-        std::map<int, Control*> mIdControlMap;
+    // static std::map<HWND, Frame*> sFrameMap;
 
-        MenuBar mMenuBar;
+    //struct Frame::Impl {
+    //public:
+    //    std::wstring mCreationTitle;
+    //    const wchar_t *mClassName = L"Frame";
+    //    HWND mHandle = nullptr;
+    //    std::vector<std::unique_ptr<Control>> mChildControls;
 
-    public:
-        static std::map<HWND, Frame*> sFrameMap;
+    //    int mControlsCreated = 10000;
+    //    std::map<HWND, Control*> mHandleControlMap;
+    //    std::map<int, Control*> mIdControlMap;
 
-    public:
-        static LRESULT WindowProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam);
+    //    MenuBar mMenuBar;
+    //};
 
-        void registerClass();
-    };
+    void registerFrameClass(const char *className);
 }
 
 
 namespace wcl::core {
-    Frame::Frame(const std::wstring &title) : mImpl(new Frame::Impl) {
-        mImpl->mCreationTitle = title;
+    Frame::Frame() {
+        registerFrameClass("wcl::core::Frame");
 
-        // create the menuBar
-        mImpl->mMenuBar.create();
+        getImpl()->mClassName = "wcl::core::Frame";
+        getImpl()->mStyle = WS_OVERLAPPEDWINDOW;
 
-        mImpl->registerClass();
-
-        mImpl->mHandle = ::CreateWindowExW(
-            NULL, mImpl->mClassName,  mImpl->mCreationTitle.c_str(),  WS_OVERLAPPEDWINDOW, 
-            CW_USEDEFAULT, CW_USEDEFAULT,
-            CW_USEDEFAULT, CW_USEDEFAULT, 
-            NULL, mImpl->mMenuBar.getHandle()->hMenu,
-            ::GetModuleHandle(NULL),
-            this
-        );
-        
-        assert(mImpl->mHandle);
-        assert(::IsWindow(mImpl->mHandle));
-
+        /*
         ::SendMessage(mImpl->mHandle, WM_SETFONT, (WPARAM)GetStockObject(DEFAULT_GUI_FONT), TRUE);
 
         // create the child controls
@@ -90,102 +72,66 @@ namespace wcl::core {
             mImpl->mHandleControlMap[window->mHandle] = control.get();
             // mImpl->mIdControlMap[id] = controlPtr.get();
         }
+        */
     }
 
 
     Frame::~Frame() {}
 
 
-    void Frame::show() {
-        assert(mImpl->mHandle);
-
-        ::ShowWindow(mImpl->mHandle, SW_SHOW);
-    }
-
-
-    void Frame::hide() {
-        assert(mImpl->mHandle);
-
-        ::ShowWindow(mImpl->mHandle, SW_HIDE);
-    }
+    //void Frame::addChildImpl(Control *control) {
+    //    mImpl->mChildControls.emplace_back(control);
+    //    mImpl->mControlsCreated ++;
+    //}
 
 
-    void Frame::setVisible(const bool visible) {
-        assert(mImpl->mHandle);
-
-        if (visible) {
-            show();
-        } else {
-            hide();
-        }
-    }
-
-
-    bool Frame::isVisible() const {
-        assert(mImpl->mHandle);
-
-        if (::IsWindowVisible(mImpl->mHandle)) {
-            return true;
-        }
-
-        return false;
-    }
-
-
-    void Frame::addChildImpl(Control *control) {
-        mImpl->mChildControls.emplace_back(control);
-        mImpl->mControlsCreated ++;
-    }
-
-
-    MenuBar* Frame::getMenuBar() {
-        return &mImpl->mMenuBar;
-    }
+    //MenuBar* Frame::getMenuBar() {
+    //    return &mImpl->mMenuBar;
+    //}
 }
 
 
 namespace wcl::core {
-    std::map<HWND, Frame*> Frame::Impl::sFrameMap;
+    // std::map<HWND, Frame*> Frame::Impl::sFrameMap;
 
 
-    LRESULT Frame::Impl::WindowProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam) {
+    LRESULT FrameWindowProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam) {
         switch (Msg) {
             case WM_CREATE: {
                 auto cs = (CREATESTRUCT *)lParam;
-                Frame::Impl::sFrameMap[hWnd] = reinterpret_cast<Frame*>(cs->lpCreateParams);
+                // Frame::Impl::sFrameMap[hWnd] = reinterpret_cast<Frame*>(cs->lpCreateParams);
                 break;
             }
 
             case WM_DESTROY: {
                 ::PostQuitMessage(0);
-                Frame::Impl::sFrameMap.erase(hWnd);
+                // Frame::Impl::sFrameMap.erase(hWnd);
 
                 return 0;
             }
 
-            case WM_COMMAND: {
-                auto frame = Frame::Impl::sFrameMap[hWnd];
-
-                auto hWndButton = reinterpret_cast<HWND>(lParam);
-                auto button = frame->mImpl->mHandleControlMap[hWndButton];
-
-                button->raise("click");
-
-                return 0;
-            }
+            //case WM_COMMAND: {
+            //    auto frame = Frame::Impl::sFrameMap[hWnd];
+            //
+            //    auto hWndButton = reinterpret_cast<HWND>(lParam);
+            //    auto button = frame->mImpl->mHandleControlMap[hWndButton];
+            //
+            //    button->raise("click");
+            //
+            //    return 0;
+            //}
         }
 
         return ::DefWindowProcW(hWnd, Msg, wParam, lParam);
     }
 
-
-    void Frame::Impl::registerClass() {
+    void registerFrameClass(const char *className) {
         WNDCLASSEX wcex = {};
 
-        wcex.lpszClassName  = mClassName;
+        wcex.lpszClassName  = className;
         wcex.hInstance      = ::GetModuleHandle(NULL);
         wcex.cbSize         = sizeof(WNDCLASSEX);
-        wcex.lpfnWndProc    = &Frame::Impl::WindowProc;
+        wcex.lpfnWndProc    = &FrameWindowProc;
         wcex.style          = CS_HREDRAW | CS_VREDRAW;
         wcex.cbClsExtra     = 0;
         wcex.cbWndExtra     = 0;

@@ -15,6 +15,9 @@ set(sources
 	"include/wcl/core/Widget.hpp"
 	"include/wcl/core/WidgetPrivate.h"
 	"include/wcl/core/ComboBox.hpp"
+	"include/wcl/core/Button.h"
+	"include/wcl/core/Edit.h"
+	"include/wcl/core/Label.h"
 	
 	"src/Application.cpp"
 	"src/Frame.cpp"
@@ -27,6 +30,9 @@ set(sources
 	"src/Widget.cpp"
 	"src/WidgetPrivate.cpp"
 	"src/ComboBox.cpp"
+	"src/Button.cpp"
+	"src/Edit.cpp"
+	"src/Label.cpp"
 
 	"src/Window.hpp"
 	"src/Window.cpp"

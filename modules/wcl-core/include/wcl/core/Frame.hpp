@@ -30,43 +30,41 @@
 #include <optional>
 #include <functional>
 
+#include "Widget.hpp"
+
 namespace wcl::core {
     class MenuBar;
     class Control;
-    class Frame {
+    class Frame : public Widget {
     public:
-        Frame(const std::wstring &title);
+        Frame();
 
         ~Frame();
 
-        void show();
+    //    template<typename WidgetT, class... Args>
+    //    WidgetT* addWidget(Args&&... args) {
+    //        ControlT *control = new ControlT(std::forward<Args>(args)...);
 
-        void hide();
+    //        addChildImpl(control);
 
-        void setVisible(const bool visible);
+    //        return control;
+    //    }
 
-        bool isVisible() const;
+    //private:
+    //    void appendWidget(Widget *widget);
 
-        template<typename ControlT, class... Args>
-        ControlT* createChild(Args&&... args) {
-            ControlT *control = new ControlT(std::forward<Args>(args)...);
+    //    template<typename ControlT, class... Args>
+    //    ControlT* createChild(Args&&... args) {
+    //        ControlT *control = new ControlT(std::forward<Args>(args)...);
 
-            addChildImpl(control);
+    //        addChildImpl(control);
 
-            return control;
-        }
+    //        return control;
+    //    }
 
-        MenuBar* getMenuBar();
+    //    MenuBar* getMenuBar();
 
-
-    protected:
-        virtual void onCreate() {}
-
-    protected:
-        void addChildImpl(Control *control);
-        
-    private:
-        struct Impl;
-        std::unique_ptr<Impl> mImpl;
+    //protected:
+    //    void addChildImpl(Control *control);
     };
 }

@@ -36,6 +36,8 @@ namespace wcl::core {
 
         bool create();
 
+        bool create(const Rect &area, Widget *parent);
+
         void show() {
             setVisible(true);
         }
