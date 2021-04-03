@@ -58,9 +58,9 @@ namespace wcl::core {
 
         Rect getClientArea() const;
 
-        void setText(const std::string &text);
+        virtual void setText(const std::string &text);
 
-        std::string getText() const;
+        virtual std::string getText() const;
 
     protected:
         WidgetPrivate* getImpl() {

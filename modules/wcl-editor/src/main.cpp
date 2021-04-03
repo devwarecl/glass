@@ -30,6 +30,12 @@ public:
         mGreetingButton.setText("Hit Me!");
         mGreetingButton.show();
 
+        mOptionsCombo.create(Rect{5, 115, 400, 400}, this);
+        mOptionsCombo.addItem("Item 1");
+        mOptionsCombo.addItem("Item 2");
+        mOptionsCombo.addItem("Item 3");
+        mOptionsCombo.show();
+
         setText("This is a test!");
         show();
     }
@@ -37,6 +43,7 @@ public:
 private:
     Label mGreetingLabel;
     Button mGreetingButton;
+    ComboBox mOptionsCombo;
 };
 
 
@@ -44,7 +51,6 @@ int main(int argc, char **argv) {
     Application app;
 
     SimpleFrame frame;
-
     frame.create();
 
     return app.run();
