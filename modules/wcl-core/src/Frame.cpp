@@ -32,9 +32,7 @@
 #include "Window.hpp"
 #include "MenuHandle.hpp"
 
-//--------------------------------------
-// Frame::Impl interface declaration
-//--------------------------------------
+
 namespace wcl::core {
     struct Frame::Impl {
     public:
@@ -63,13 +61,7 @@ namespace wcl::core {
 namespace wcl::core {
     Frame::Frame(const std::wstring &title) : mImpl(new Frame::Impl) {
         mImpl->mCreationTitle = title;
-    }
 
-
-    Frame::~Frame() {}
-
-
-    void Frame::create() {
         // create the menuBar
         mImpl->mMenuBar.create();
 
@@ -83,7 +75,7 @@ namespace wcl::core {
             ::GetModuleHandle(NULL),
             this
         );
-
+        
         assert(mImpl->mHandle);
         assert(::IsWindow(mImpl->mHandle));
 
@@ -99,6 +91,9 @@ namespace wcl::core {
             // mImpl->mIdControlMap[id] = controlPtr.get();
         }
     }
+
+
+    Frame::~Frame() {}
 
 
     void Frame::show() {

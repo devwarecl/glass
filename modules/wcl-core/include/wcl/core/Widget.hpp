@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright © 2021 Felipe Apablaza.
+ * Copyright © 2021 Felipe Apablaza C.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this 
  * software and associated documentation files (the “Software”), to deal in the Software 
@@ -19,54 +19,60 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-
 #pragma once 
 
-#include <cassert>
 #include <string>
-#include <vector>
-#include <memory>
-#include <utility>
-#include <optional>
-#include <functional>
+
+#include "Rect.hpp"
 
 namespace wcl::core {
-    class MenuBar;
-    class Control;
-    class Frame {
+    class WidgetPrivate;
+    class Widget {
+    protected:
+        explicit Widget();
+
     public:
-        Frame(const std::wstring &title);
+        virtual ~Widget();
 
-        ~Frame();
+        bool create();
 
-        void show();
+        void show() {
+            setVisible(true);
+        }
 
-        void hide();
+        void hide() {
+            setVisible(false);
+        }
 
-        void setVisible(const bool visible);
+        void toggleVisible() {
+            setVisible(! isVisible());
+        }
+
+        void setVisible(const bool value);
 
         bool isVisible() const;
 
-        template<typename ControlT, class... Args>
-        ControlT* createChild(Args&&... args) {
-            ControlT *control = new ControlT(std::forward<Args>(args)...);
+        Rect getArea() const;
 
-            addChildImpl(control);
+        Rect getClientArea() const;
 
-            return control;
+        void setText(const std::string &text);
+
+        std::string getText() const;
+
+    protected:
+        WidgetPrivate* getImpl() {
+            return mImpl;
         }
 
-        MenuBar* getMenuBar();
-
-
-    protected:
-        virtual void onCreate() {}
+        const WidgetPrivate* getImpl() const {
+            return mImpl;
+        }
 
     protected:
-        void addChildImpl(Control *control);
-        
+        virtual void onCreated() {}
+
     private:
-        struct Impl;
-        std::unique_ptr<Impl> mImpl;
+        WidgetPrivate *mImpl = nullptr;
     };
 }

@@ -12,6 +12,9 @@ set(sources
 	"include/wcl/core/MenuItem.hpp"
 	"include/wcl/core/Action.hpp"
 	"include/wcl/core/EventRaiser.hpp"
+	"include/wcl/core/Widget.hpp"
+	"include/wcl/core/WidgetPrivate.h"
+	"include/wcl/core/ComboBox.hpp"
 	
 	"src/Application.cpp"
 	"src/Frame.cpp"
@@ -21,12 +24,18 @@ set(sources
 	"src/MenuItem.cpp"
 	"src/Action.cpp"
 	"src/EventRaiser.cpp"
+	"src/Widget.cpp"
+	"src/WidgetPrivate.cpp"
+	"src/ComboBox.cpp"
 
 	"src/Window.hpp"
 	"src/Window.cpp"
 
 	"src/MenuHandle.hpp"
 	"src/MenuHandle.cpp"
+
+	"src/WinUtil.hpp"
+	"src/WinUtil.cpp"
 )
 
 add_library(${target} ${sources})

@@ -9,3 +9,4 @@
 #include "core/Menu.hpp"
 #include "core/MenuItem.hpp"
 #include "core/Action.hpp"
+#include "core/Widget.hpp"
