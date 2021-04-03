@@ -59,20 +59,6 @@ namespace wcl::core {
 
         getImpl()->mClassName = "wcl::core::Frame";
         getImpl()->mStyle = WS_OVERLAPPEDWINDOW;
-
-        /*
-        ::SendMessage(mImpl->mHandle, WM_SETFONT, (WPARAM)GetStockObject(DEFAULT_GUI_FONT), TRUE);
-
-        // create the child controls
-        for (auto &control : mImpl->mChildControls) {
-            auto window = control->getWindow();
-
-            window->create(mImpl->mHandle);
-
-            mImpl->mHandleControlMap[window->mHandle] = control.get();
-            // mImpl->mIdControlMap[id] = controlPtr.get();
-        }
-        */
     }
 
 
