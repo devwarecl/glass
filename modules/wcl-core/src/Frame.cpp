@@ -32,9 +32,28 @@
 
 
 namespace wcl::core {
+    void CommandHandler::attachToWndProc(void* hWnd) {
+        const auto key = MessageKey{reinterpret_cast<HWND>(hWnd), WM_COMMAND};
+        
+        gMessageKeyHandlerMap[key].push_back( [this] (const MessageParams &params) {
+            const Command command = translateCommand(params);
+            this->onCommand(command);
+            return 0;
+        });
+    }
 
-    // static std::map<HWND, Frame*> sFrameMap;
+    
+    void CommandHandler::dettachFromWndProc(void* hWnd) {
+        const auto key = MessageKey{reinterpret_cast<HWND>(hWnd), WM_COMMAND};
+        gMessageKeyHandlerMap.erase(key);
+    }
+}
 
+
+namespace wcl::core {
+
+    static std::map<HWND, Frame*> sFrameMap;
+    
     //struct Frame::Impl {
     //public:
     //    std::wstring mCreationTitle;
@@ -49,69 +68,117 @@ namespace wcl::core {
     //    MenuBar mMenuBar;
     //};
 
-    void registerFrameClass(const char *className);
+    void registerFrameClass(const wchar_t *className);
 }
 
 
 namespace wcl::core {
     Frame::Frame() {
-        registerFrameClass("wcl::core::Frame");
+        registerFrameClass(L"wcl::core::Frame");
 
-        getImpl()->mClassName = "wcl::core::Frame";
+        getImpl()->mClassName = L"wcl::core::Frame";
         getImpl()->mStyle = WS_OVERLAPPEDWINDOW;
     }
 
 
-    Frame::~Frame() {}
+    Frame::~Frame() {
+        auto it = sFrameMap.find(getImpl()->getHwnd());
+
+        if (it != sFrameMap.end()) {
+            sFrameMap.erase(it);
+        }
+    }
 
 
-    //void Frame::addChildImpl(Control *control) {
-    //    mImpl->mChildControls.emplace_back(control);
-    //    mImpl->mControlsCreated ++;
-    //}
+    void Frame::onCreated() {
+        sFrameMap[getImpl()->getHwnd()] = this;
 
-
-    //MenuBar* Frame::getMenuBar() {
-    //    return &mImpl->mMenuBar;
-    //}
+        attachToWndProc(this->getImpl()->getHwnd());
+    }
 }
 
 
 namespace wcl::core {
-    // std::map<HWND, Frame*> Frame::Impl::sFrameMap;
+    //using MessageHandler = std::function<LRESULT (HWND, WPARAM, LPARAM)>;
+
+    //class FrameWindowProcedure {
+    //public:
+    //    LRESULT Procedure (HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam) {
+    //        auto it = mHandlers.find(Msg);
+
+    //        if (it == mHandlers.end()) {
+    //            return ::DefWindowProcW(hWnd, Msg, wParam, lParam);
+    //        } else {
+    //            return it->second(hWnd, wParam, lParam);
+    //        }
+    //    }
+
+    //protected:
+    //    std::map<UINT, MessageHandler> mHandlers;
+    //};
 
 
-    LRESULT FrameWindowProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam) {
-        switch (Msg) {
-            case WM_CREATE: {
-                auto cs = (CREATESTRUCT *)lParam;
-                // Frame::Impl::sFrameMap[hWnd] = reinterpret_cast<Frame*>(cs->lpCreateParams);
-                break;
+    //class MyFrameWindowProcedure : public FrameWindowProcedure {
+    //public:
+    //    MyFrameWindowProcedure() {
+    //        mHandlers[WM_DESTROY] = [](HWND hWnd, WPARAM wParam, LPARAM lParam) {
+    //            return 0;
+    //        };
+    //    }
+    //};
+
+
+    LRESULT FrameWindowProc2(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam) {
+        const auto it = gMessageKeyHandlerMap.find({hWnd, Msg});
+
+        if (it != gMessageKeyHandlerMap.end()) {
+            for (auto &fn : it->second) {
+                fn({wParam, lParam});
             }
 
-            case WM_DESTROY: {
-                ::PostQuitMessage(0);
-                // Frame::Impl::sFrameMap.erase(hWnd);
-
-                return 0;
-            }
-
-            //case WM_COMMAND: {
-            //    auto frame = Frame::Impl::sFrameMap[hWnd];
-            //
-            //    auto hWndButton = reinterpret_cast<HWND>(lParam);
-            //    auto button = frame->mImpl->mHandleControlMap[hWndButton];
-            //
-            //    button->raise("click");
-            //
-            //    return 0;
-            //}
+            return 0;
         }
 
         return ::DefWindowProcW(hWnd, Msg, wParam, lParam);
     }
 
-    void registerFrameClass(const char *className) {
+
+    LRESULT FrameWindowProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam) {
+        switch (Msg) {
+            //case WM_CREATE: {
+            //    auto cs = (CREATESTRUCT *)lParam;
+            //    break;
+            //}
+
+            case WM_DESTROY: {
+                ::PostQuitMessage(0);
+                return 0;
+            }
+
+            case WM_COMMAND: {
+                const int Menu = 0;
+                const int Accelerator = 1;
+
+                const int notificationId = HIWORD(wParam);
+                const int sourceId = LOWORD(wParam);
+
+                const HWND sourceHandle = reinterpret_cast<HWND>(lParam);
+
+                auto frame = sFrameMap[hWnd];
+
+                if (notificationId == BN_CLICKED) {
+                    
+                }
+
+                return 0;
+            }
+        }
+
+        return ::DefWindowProcW(hWnd, Msg, wParam, lParam);
+    }
+
+
+    void registerFrameClass(const wchar_t *className) {
         WNDCLASSEX wcex = {};
 
         wcex.lpszClassName  = className;

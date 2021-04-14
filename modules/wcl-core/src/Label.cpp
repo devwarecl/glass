@@ -5,7 +5,7 @@
 
 namespace wcl::core {
     Label::Label() {
-        getImpl()->mClassName = "STATIC";
+        getImpl()->mClassName = L"STATIC";
         getImpl()->mStyle = WS_CHILD;
     }
 }

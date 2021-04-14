@@ -2,13 +2,14 @@
 #include <wcl/core/ComboBox.hpp>
 
 #include <wcl/core/WidgetPrivate.h>
+#include <wcl/core/StringUtil.h>
 
 #include <windowsx.h>
 #include "WinUtil.hpp"
 
 namespace wcl::core {
     ComboBox::ComboBox() {
-        getImpl()->mClassName = "COMBOBOX";
+        getImpl()->mClassName = L"COMBOBOX";
         getImpl()->mStyle = WS_CHILD;
     }
 
@@ -35,11 +36,11 @@ namespace wcl::core {
     void ComboBox::addItem(const std::string &value) {
         auto hWnd = getImpl()->getHwnd();
 
-        ComboBox_AddString(hWnd, value.c_str());
+        ComboBox_AddString(hWnd, widen(value).c_str());
     }
 
 
-    void ComboBox::remoteItem(const size_t index) {
+    void ComboBox::removeItem(const size_t index) {
         auto hWnd = getImpl()->getHwnd();
 
     }

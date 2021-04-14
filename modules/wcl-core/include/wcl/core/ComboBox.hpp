@@ -20,7 +20,7 @@ namespace wcl::core {
 
         void addItem(const std::string &value);
 
-        void remoteItem(const size_t index);
+        void removeItem(const size_t index);
 
         std::optional<size_t> getSelectedIndex() const;
 

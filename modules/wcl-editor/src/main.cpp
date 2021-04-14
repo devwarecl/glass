@@ -8,7 +8,6 @@ using wcl::core::Button;
 using wcl::core::Edit;
 using wcl::core::ComboBox;
 using wcl::core::Rect;
-using wcl::core::Control;
 using wcl::core::EventRaiser;
 using wcl::core::Menu;
 using wcl::core::MenuBar;
@@ -38,6 +37,15 @@ public:
 
         setText("This is a test!");
         show();
+
+        // mGreetingButton.connect(Button::Notifications::Clicked, [this]() {this->greetingButton_Clicked();});
+        // connect2<Button, Button::Clicked>(mGreetingButton, [this](){this->greetingButton_Clicked();});
+    }
+
+
+    void greetingButton_Clicked() {
+        const auto count = mOptionsCombo.getItemCount();
+        mOptionsCombo.addItem("User Clicked! " + std::to_string(count));
     }
 
 private:
@@ -51,7 +59,7 @@ int main(int argc, char **argv) {
     Application app;
 
     SimpleFrame frame;
-    frame.create();
+    assert(frame.create());
 
     return app.run();
 }

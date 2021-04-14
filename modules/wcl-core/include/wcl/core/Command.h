@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright © 2021 Felipe Apablaza.
+ * Copyright © 2021 Felipe Apablaza C.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this 
  * software and associated documentation files (the “Software”), to deal in the Software 
@@ -19,29 +19,43 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-
 #pragma once 
 
-#include <cassert>
-#include <string>
-#include <vector>
-#include <memory>
-#include <utility>
 #include <optional>
-#include <functional>
-
-#include "Widget.hpp"
-#include "Command.h"
 
 namespace wcl::core {
-    class MenuBar;
-    class Control;
-    class Frame : public Widget, public CommandHandler {
-    public:
-        Frame();
-
-        ~Frame();
-
-        void onCreated() override;
+    enum class CommandSourceType {
+        Menu, 
+        Accelerator,
+        ControlNotification
     };
+
+    struct CommandSource {
+        CommandSourceType type;
+        int id;
+    };
+
+    struct CommandData {
+        int notificationNode = 0;
+        void *handle = nullptr;
+    };
+
+    struct Command {
+        CommandSource source;
+        std::optional<CommandData> data;
+    };
+
+    class CommandHandler {
+    public:
+        virtual void onCommand(const Command &cmd) {}
+
+    protected:
+        void attachToWndProc(void* hWnd);
+
+        void dettachFromWndProc(void* hWnd);
+    };
+
+    struct MessageParams;
+
+    Command translateCommand(const MessageParams &params);
 }

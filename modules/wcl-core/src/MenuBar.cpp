@@ -2,7 +2,6 @@
 #include <wcl/core/MenuBar.hpp>
 #include <wcl/core/Menu.hpp>
 
-#define UNICODE
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 

@@ -24,6 +24,7 @@
 
 #include <cassert>
 #include <wcl/core/WidgetPrivate.h>
+#include <wcl/core/StringUtil.h>
 #include "WinUtil.hpp"
 
 namespace wcl::core {
@@ -103,7 +104,7 @@ namespace wcl::core {
     void Widget::setText(const std::string &value) {
         auto hWnd = getImpl()->getHwnd();
 
-        ::SetWindowText(hWnd, value.c_str());
+        ::SetWindowText(hWnd, widen(value).c_str());
     }
 
 
@@ -112,11 +113,11 @@ namespace wcl::core {
 
         const int length = ::GetWindowTextLength(hWnd);
 
-        std::string value;
+        std::wstring value;
         value.resize(static_cast<size_t>(length) + 1);
 
-        ::GetWindowText(hWnd, const_cast<char*>(value.c_str()), length + 1);
+        ::GetWindowText(hWnd, const_cast<wchar_t*>(value.c_str()), length + 1);
 
-        return value;
+        return narrow(value);
     }
 }

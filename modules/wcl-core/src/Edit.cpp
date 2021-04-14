@@ -5,7 +5,7 @@
 
 namespace wcl::core {
     Edit::Edit() {
-        getImpl()->mClassName = "EDIT";
+        getImpl()->mClassName = L"EDIT";
         getImpl()->mStyle = WS_CHILD;
     }
 }

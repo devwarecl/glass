@@ -3,7 +3,33 @@
 
 #include <Windows.h>
 
+#include <map>
+#include <functional>
+
 namespace wcl::core {
+    struct MessageKey {
+        HWND hWnd;
+        UINT nMsg;
+
+        bool operator<(const MessageKey &rhs) const {
+            if (hWnd < rhs.hWnd) {
+                return true;
+            }
+
+            return nMsg < rhs.nMsg;
+        }
+    };
+
+    struct MessageParams {
+        WPARAM wParam;
+        LPARAM lParam;
+    };
+
+    using MessageHandler = std::function<LRESULT (const MessageParams& params)>;
+
+    extern std::map<MessageKey, std::vector<MessageHandler>> gMessageKeyHandlerMap;
+
+
     class WidgetPrivate {
     public:
         WidgetPrivate() {}
@@ -18,7 +44,7 @@ namespace wcl::core {
 
     public:
         HWND mHwnd = nullptr;
-        const char *mClassName = nullptr;
+        const wchar_t *mClassName = nullptr;
         DWORD mStyle = 0L;
         DWORD mExStyle = 0L;
     };

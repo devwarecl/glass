@@ -18,6 +18,8 @@ set(sources
 	"include/wcl/core/Button.h"
 	"include/wcl/core/Edit.h"
 	"include/wcl/core/Label.h"
+	"include/wcl/core/Command.h"
+	"include/wcl/core/StringUtil.h"
 	
 	"src/Application.cpp"
 	"src/Frame.cpp"
@@ -33,7 +35,9 @@ set(sources
 	"src/Button.cpp"
 	"src/Edit.cpp"
 	"src/Label.cpp"
-
+	"src/Command.cpp"
+	"src/StringUtil.cpp"
+	
 	"src/Window.hpp"
 	"src/Window.cpp"
 
@@ -46,4 +50,5 @@ set(sources
 
 add_library(${target} ${sources})
 
+target_compile_definitions(${target} PUBLIC "-DUNICODE")
 target_include_directories(${target} PUBLIC "include/")
