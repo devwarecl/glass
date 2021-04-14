@@ -51,7 +51,6 @@ namespace wcl::core {
 
 
 namespace wcl::core {
-
     static std::map<HWND, Frame*> sFrameMap;
     
     //struct Frame::Impl {
@@ -128,7 +127,7 @@ namespace wcl::core {
     //};
 
 
-    LRESULT FrameWindowProc2(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam) {
+    LRESULT FrameWindowProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam) {
         const auto it = gMessageKeyHandlerMap.find({hWnd, Msg});
 
         if (it != gMessageKeyHandlerMap.end()) {
@@ -143,7 +142,7 @@ namespace wcl::core {
     }
 
 
-    LRESULT FrameWindowProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam) {
+    LRESULT FrameWindowProc2(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam) {
         switch (Msg) {
             //case WM_CREATE: {
             //    auto cs = (CREATESTRUCT *)lParam;
