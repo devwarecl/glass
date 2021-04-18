@@ -33,9 +33,7 @@
 
 namespace wcl::core {
     void CommandHandler::attachToWndProc(void* hWnd) {
-        const auto key = MessageKey{reinterpret_cast<HWND>(hWnd), WM_COMMAND};
-        
-        gMessageKeyHandlerMap[key].push_back( [this] (const MessageParams &params) {
+        gMessageDispatcher.appendHandler(reinterpret_cast<HWND>(hWnd), WM_COMMAND, [this] (const MessageParams &params) {
             const Command command = translateCommand(params);
             this->onCommand(command);
             return 0;
@@ -44,8 +42,7 @@ namespace wcl::core {
 
     
     void CommandHandler::dettachFromWndProc(void* hWnd) {
-        const auto key = MessageKey{reinterpret_cast<HWND>(hWnd), WM_COMMAND};
-        gMessageKeyHandlerMap.erase(key);
+        // TODO: Add implementation
     }
 }
 
@@ -128,13 +125,7 @@ namespace wcl::core {
 
 
     LRESULT FrameWindowProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam) {
-        const auto it = gMessageKeyHandlerMap.find({hWnd, Msg});
-
-        if (it != gMessageKeyHandlerMap.end()) {
-            for (auto &fn : it->second) {
-                fn({wParam, lParam});
-            }
-
+        if (gMessageDispatcher.callHandlers(hWnd, Msg, wParam, lParam)) {
             return 0;
         }
 

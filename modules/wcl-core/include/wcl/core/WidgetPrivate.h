@@ -27,8 +27,18 @@ namespace wcl::core {
 
     using MessageHandler = std::function<LRESULT (const MessageParams& params)>;
 
-    extern std::map<MessageKey, std::vector<MessageHandler>> gMessageKeyHandlerMap;
+    class MessageDispatcher {
+    public:
+        void appendHandler(const HWND hWnd, const UINT nMsg, MessageHandler handler);
 
+        bool callHandlers(const HWND hWnd, const UINT nMsg, WPARAM wParam, LPARAM lParam);
+
+    private:
+        std::map<MessageKey, std::vector<MessageHandler>> mMessageKeyHandlerMap;
+    };
+
+
+    extern MessageDispatcher gMessageDispatcher;
 
     class WidgetPrivate {
     public:
@@ -41,6 +51,8 @@ namespace wcl::core {
         HWND getHwnd() const {
             return mHwnd;
         }
+
+        void appendMsgHandler(const int Msg, MessageHandler handler) const;
 
     public:
         HWND mHwnd = nullptr;

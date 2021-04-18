@@ -38,7 +38,7 @@ public:
         setText("This is a test!");
         show();
 
-        // mGreetingButton.connect(Button::Notifications::Clicked, [this]() {this->greetingButton_Clicked();});
+        mGreetingButton.connect(Button::Notifications::Clicked, [this]() {this->greetingButton_Clicked();});
         // connect2<Button, Button::Clicked>(mGreetingButton, [this](){this->greetingButton_Clicked();});
     }
 

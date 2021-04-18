@@ -15,18 +15,14 @@ namespace wcl::core {
 
     bool Button::create(const Rect &area, Widget *parent) {
         const bool result = Widget::create(area, parent);
-        /*
-        const auto hWndParent = GetParent(this->getImpl()->getHwnd());
-        const auto key = MessageKey{reinterpret_cast<HWND>(hWndParent), WM_COMMAND};
-        
-        const auto hWnd = reinterpret_cast<HWND>(this->getImpl()->getHwnd());
+
         const auto &connections = mConnections;
 
-        gMessageKeyHandlerMap[key].push_back( [hWnd, connections] (const MessageParams &params) {
+        getImpl()->appendMsgHandler(WM_COMMAND, [connections] (const MessageParams &params) {
             const Command command = translateCommand(params);
 
-            if (command.source.type == wcl::core::CommandSourceType::ControlNotification) {
-                if (command.data->handle == hWnd && command.data->notificationNode == BN_CLICKED) {
+            if (command.source.type == wcl::core::CommandSourceType::ControlNotification || command.source.type == wcl::core::CommandSourceType::Menu) {
+                if (command.data->notificationNode == BN_CLICKED) {
                     const auto it = connections.find(Button::Notifications::Clicked);
 
                     if (it != connections.end()) {
@@ -37,7 +33,6 @@ namespace wcl::core {
 
             return 0;
         });
-        */
 
         return result;
     }
@@ -48,6 +43,8 @@ namespace wcl::core {
 
         if (it != mConnections.end()) {
             it->second = fn;
+        } else {
+            mConnections[notification] = fn;
         }
     }
 }
